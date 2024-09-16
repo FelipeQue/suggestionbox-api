@@ -2,11 +2,13 @@ package br.com.fullstack.suggestionbox.entities;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
 @Data
 @Entity
+@NoArgsConstructor
 @Table(name = "suggestions")
 public class Suggestion {
 
@@ -20,9 +22,9 @@ public class Suggestion {
     @Column(nullable = false, length = 2048)
     private String description;
 
-    private LocalDateTime entryTime;
+    private LocalDateTime createdAt;
 
-    private LocalDateTime updateTime;
+    private LocalDateTime updatedAt;
 
 
 
