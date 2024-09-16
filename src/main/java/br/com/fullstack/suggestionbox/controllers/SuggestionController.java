@@ -1,10 +1,13 @@
 package br.com.fullstack.suggestionbox.controllers;
 
+import br.com.fullstack.suggestionbox.dtos.SuggestionFilter;
 import br.com.fullstack.suggestionbox.dtos.SuggestionRequest;
 import br.com.fullstack.suggestionbox.dtos.SuggestionResponse;
 import br.com.fullstack.suggestionbox.services.SuggestionService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,6 +24,13 @@ public class SuggestionController {
     public SuggestionResponse create(@RequestBody SuggestionRequest request){
         log.info("POST /suggestions -> Controller called.");
         return service.create(request);
+    }
+
+    @GetMapping
+    @ResponseStatus(HttpStatus.OK)
+    public Page<SuggestionResponse> list(SuggestionFilter filter, Pageable pageable){
+        log.info("GET /suggestions -> Controller called.");
+        return service.list(filter, pageable);
     }
 
 
