@@ -1,8 +1,10 @@
 package br.com.fullstack.suggestionbox.entities;
 
+import br.com.fullstack.suggestionbox.dtos.SuggestionRequest;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.beans.BeanUtils;
 
 import java.time.LocalDateTime;
 
@@ -26,6 +28,9 @@ public class Suggestion {
 
     private LocalDateTime updatedAt;
 
+    public Suggestion(SuggestionRequest request) {
+        BeanUtils.copyProperties(request, this);
+    }
 
 
 }
