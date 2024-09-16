@@ -1,8 +1,6 @@
 package br.com.fullstack.suggestionbox.controllers;
 
-import br.com.fullstack.suggestionbox.dtos.SuggestionFilter;
-import br.com.fullstack.suggestionbox.dtos.SuggestionRequest;
-import br.com.fullstack.suggestionbox.dtos.SuggestionResponse;
+import br.com.fullstack.suggestionbox.dtos.*;
 import br.com.fullstack.suggestionbox.services.SuggestionService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,6 +29,15 @@ public class SuggestionController {
     public Page<SuggestionResponse> list(SuggestionFilter filter, Pageable pageable){
         log.info("GET /suggestions -> Controller called.");
         return service.list(filter, pageable);
+    }
+
+    @PostMapping("/{id}/comments")
+    @ResponseStatus(HttpStatus.CREATED)
+    public CommentResponse addComment(
+            @PathVariable(name = "id") Long suggestionId,
+            @RequestBody CommentRequest request){
+        log.info("POST /suggestions/{id}/comments -> Controller called.");
+        return service.addComment(suggestionId, request);
     }
 
 

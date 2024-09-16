@@ -1,9 +1,9 @@
 package br.com.fullstack.suggestionbox.services;
 
-import br.com.fullstack.suggestionbox.dtos.SuggestionFilter;
-import br.com.fullstack.suggestionbox.dtos.SuggestionRequest;
-import br.com.fullstack.suggestionbox.dtos.SuggestionResponse;
+import br.com.fullstack.suggestionbox.dtos.*;
+import br.com.fullstack.suggestionbox.entities.Comment;
 import br.com.fullstack.suggestionbox.entities.Suggestion;
+import br.com.fullstack.suggestionbox.repositories.CommentRepository;
 import br.com.fullstack.suggestionbox.repositories.SuggestionRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,6 +19,7 @@ import java.time.LocalDateTime;
 public class SuggestionServiceImpl implements SuggestionService{
 
     private final SuggestionRepository repository;
+    private final CommentRepository commentRepository;
 
     @Override
     public SuggestionResponse create(SuggestionRequest request) {
@@ -44,6 +45,23 @@ public class SuggestionServiceImpl implements SuggestionService{
             suggestions = repository.findAllByOrderByUpdatedAtDesc(pageable);
         }
         return suggestions.map(SuggestionResponse::new);
+    }
+
+    @Override
+    public CommentResponse addComment(Long suggestionId, CommentRequest request) {
+        log.info("POST /suggestions/{id}/comments -> Service called.");
+        Suggestion suggestion = repository
+                .findById(suggestionId)
+                .orElseThrow(() -> new RuntimeException("Patient not found with id " + suggestionId));
+        log.info("Suggestion found.");
+        Comment comment = new Comment();
+        comment.setSuggestion(suggestion);
+        comment.setText(request.getText());
+        comment.setCreatedAt(LocalDateTime.now());
+        Comment savedComment = commentRepository.save(comment);
+        CommentResponse response = new CommentResponse(savedComment);
+        response.setSuggestionId(savedComment.getSuggestion().getId());
+        return response;
     }
 
 
