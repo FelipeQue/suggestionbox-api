@@ -2,6 +2,7 @@ package br.com.fullstack.suggestionbox.controllers;
 
 import br.com.fullstack.suggestionbox.dtos.*;
 import br.com.fullstack.suggestionbox.services.SuggestionService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -19,7 +20,7 @@ public class SuggestionController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public SuggestionResponse create(@RequestBody SuggestionRequest request){
+    public SuggestionResponse create(@Valid @RequestBody SuggestionRequest request){
         log.info("POST /suggestions -> Controller called.");
         return service.create(request);
     }
@@ -42,7 +43,7 @@ public class SuggestionController {
     @ResponseStatus(HttpStatus.CREATED)
     public CommentResponse addComment(
             @PathVariable(name = "id") Long suggestionId,
-            @RequestBody CommentRequest request){
+            @Valid @RequestBody CommentRequest request){
         log.info("POST /suggestions/{id}/comments -> Controller called.");
         return service.addComment(suggestionId, request);
     }
