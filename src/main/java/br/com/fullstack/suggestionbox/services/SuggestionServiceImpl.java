@@ -63,6 +63,9 @@ public class SuggestionServiceImpl implements SuggestionService{
         comment.setCreatedAt(LocalDateTime.now());
         Comment savedComment = commentRepository.save(comment);
         log.info("Added comment.");
+        suggestion.setUpdatedAt(LocalDateTime.now());
+        repository.save(suggestion);
+        log.info("Updated suggestion time.");
         CommentResponse response = new CommentResponse(savedComment);
         response.setSuggestionId(savedComment.getSuggestion().getId());
         return response;
@@ -74,17 +77,17 @@ public class SuggestionServiceImpl implements SuggestionService{
         Suggestion suggestion = repository
                 .findById(id)
                 .orElseThrow(() -> new SuggestionNotFoundException(id));
+        log.info("Suggestion found.");
         SuggestionDetailResponse response = new SuggestionDetailResponse(suggestion);
         List<Comment> comments = commentRepository.findBySuggestionOrderByCreatedAtDesc(suggestion);
         List<CommentResponse> commentsResponse = new ArrayList<>();
         for (Comment comment : comments) {
             CommentResponse commentResponse = new CommentResponse(comment);
-//            commentResponse.setText(comment.getText());
             commentResponse.setSuggestionId(comment.getSuggestion().getId());
-//            commentResponse.setCreatedAt(comment.getCreatedAt());
             commentsResponse.add(commentResponse);
         }
         response.setComments(commentsResponse);
+        log.info("Retrieved list of comments.");
         return response;
     }
 
