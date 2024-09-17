@@ -59,6 +59,7 @@ public class SuggestionServiceImpl implements SuggestionService{
         comment.setText(request.getText());
         comment.setCreatedAt(LocalDateTime.now());
         Comment savedComment = commentRepository.save(comment);
+        log.info("Added comment.");
         CommentResponse response = new CommentResponse(savedComment);
         response.setSuggestionId(savedComment.getSuggestion().getId());
         return response;

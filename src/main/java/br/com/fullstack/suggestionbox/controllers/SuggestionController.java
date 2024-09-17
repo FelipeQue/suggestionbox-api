@@ -31,6 +31,13 @@ public class SuggestionController {
         return service.list(filter, pageable);
     }
 
+    @GetMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public SuggestionResponse search(){
+        log.info("GET /suggestions/{id} -> Controller called.");
+        return service.search();
+    }
+
     @PostMapping("/{id}/comments")
     @ResponseStatus(HttpStatus.CREATED)
     public CommentResponse addComment(
