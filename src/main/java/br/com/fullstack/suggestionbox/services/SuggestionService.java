@@ -11,4 +11,6 @@ public interface SuggestionService {
     Page<SuggestionResponse> list(SuggestionFilter filter, Pageable pageable);
 
     CommentResponse addComment(Long suggestionId, CommentRequest request);
+
+    SuggestionDetailResponse search(Long id);
 }

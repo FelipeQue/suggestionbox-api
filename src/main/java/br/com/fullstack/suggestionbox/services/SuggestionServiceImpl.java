@@ -3,6 +3,7 @@ package br.com.fullstack.suggestionbox.services;
 import br.com.fullstack.suggestionbox.dtos.*;
 import br.com.fullstack.suggestionbox.entities.Comment;
 import br.com.fullstack.suggestionbox.entities.Suggestion;
+import br.com.fullstack.suggestionbox.exceptions.SuggestionNotFoundException;
 import br.com.fullstack.suggestionbox.repositories.CommentRepository;
 import br.com.fullstack.suggestionbox.repositories.SuggestionRepository;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +13,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -52,7 +55,7 @@ public class SuggestionServiceImpl implements SuggestionService{
         log.info("POST /suggestions/{id}/comments -> Service called.");
         Suggestion suggestion = repository
                 .findById(suggestionId)
-                .orElseThrow(() -> new RuntimeException("Patient not found with id " + suggestionId));
+                .orElseThrow(() -> new SuggestionNotFoundException(suggestionId));
         log.info("Suggestion found.");
         Comment comment = new Comment();
         comment.setSuggestion(suggestion);
@@ -62,6 +65,26 @@ public class SuggestionServiceImpl implements SuggestionService{
         log.info("Added comment.");
         CommentResponse response = new CommentResponse(savedComment);
         response.setSuggestionId(savedComment.getSuggestion().getId());
+        return response;
+    }
+
+    @Override
+    public SuggestionDetailResponse search(Long id) {
+        log.info("GET /suggestions/{id} -> Service called.");
+        Suggestion suggestion = repository
+                .findById(id)
+                .orElseThrow(() -> new SuggestionNotFoundException(id));
+        SuggestionDetailResponse response = new SuggestionDetailResponse(suggestion);
+        List<Comment> comments = commentRepository.findBySuggestionOrderByCreatedAtDesc(suggestion);
+        List<CommentResponse> commentsResponse = new ArrayList<>();
+        for (Comment comment : comments) {
+            CommentResponse commentResponse = new CommentResponse(comment);
+//            commentResponse.setText(comment.getText());
+            commentResponse.setSuggestionId(comment.getSuggestion().getId());
+//            commentResponse.setCreatedAt(comment.getCreatedAt());
+            commentsResponse.add(commentResponse);
+        }
+        response.setComments(commentsResponse);
         return response;
     }
 

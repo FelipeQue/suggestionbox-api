@@ -33,9 +33,9 @@ public class SuggestionController {
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public SuggestionResponse search(){
+    public SuggestionDetailResponse search(@PathVariable(name = "id") Long id){
         log.info("GET /suggestions/{id} -> Controller called.");
-        return service.search();
+        return service.search(id);
     }
 
     @PostMapping("/{id}/comments")
