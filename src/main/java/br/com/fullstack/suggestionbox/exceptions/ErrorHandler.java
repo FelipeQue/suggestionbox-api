@@ -60,7 +60,6 @@ public class ErrorHandler {
                         .fields(exception
                                 .getFieldErrors()
                                 .stream()
-//                                .map(FieldError::toString)
                                 .map(FieldError::getField)
                                 .toList())
                         .build()
